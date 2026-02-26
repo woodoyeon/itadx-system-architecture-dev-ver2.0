@@ -1,0 +1,29 @@
+# 개발 모드 전용 — Postgres + Redis만 사용 (나머지는 로컬 pnpm dev)
+# 포트 충돌 시 호스트 5433/6380 사용 (envs/.env.dev 에 DB_PORT, REDIS_PORT 반영)
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: itadx-postgres
+    environment:
+      POSTGRES_DB: itadx_mvp
+      POSTGRES_USER: itadx
+      POSTGRES_PASSWORD: itadx_dev
+    ports: ["5433:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U itadx"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: itadx-redis
+    ports: ["6380:6379"]
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+
+volumes:
+  pgdata:

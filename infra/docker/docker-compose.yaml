@@ -1,0 +1,82 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: itadx-postgres
+    environment:
+      POSTGRES_DB: itadx_mvp
+      POSTGRES_USER: itadx
+      POSTGRES_PASSWORD: ${DB_PASS:-itadx_dev}
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U itadx"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: itadx-redis
+    ports: ["6379:6379"]
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+
+  auth-api:
+    build: { context: ., dockerfile: services/auth-api/Dockerfile }
+    container_name: itadx-auth-api
+    ports: ["4001:4001"]
+    env_file: envs/.env.${NODE_ENV:-dev}
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+
+  admin-api:
+    build: { context: ., dockerfile: services/admin-api/Dockerfile }
+    container_name: itadx-admin-api
+    ports: ["4000:4000"]
+    env_file: envs/.env.${NODE_ENV:-dev}
+    depends_on:
+      postgres: { condition: service_healthy }
+
+  erp-api:
+    build: { context: ., dockerfile: services/erp-api/Dockerfile }
+    container_name: itadx-erp-api
+    ports: ["4002:4002"]
+    env_file: envs/.env.${NODE_ENV:-dev}
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+
+  gateway-api:
+    build: { context: ., dockerfile: services/gateway-api/Dockerfile }
+    container_name: itadx-gateway-api
+    ports: ["4003:4003"]
+    env_file: envs/.env.${NODE_ENV:-dev}
+
+  engine-api:
+    build: { context: engine/engine-api }
+    container_name: itadx-engine-api
+    ports: ["8000:8000"]
+    env_file: envs/.env.${NODE_ENV:-dev}
+    depends_on:
+      postgres: { condition: service_healthy }
+
+  admin-web:
+    build: { context: ., dockerfile: apps/admin-web/Dockerfile }
+    container_name: itadx-admin-web
+    ports: ["3000:3000"]
+    env_file: envs/.env.${NODE_ENV:-dev}
+
+  nginx:
+    image: nginx:alpine
+    container_name: itadx-nginx
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on: [admin-web, gateway-api]
+
+volumes:
+  pgdata:

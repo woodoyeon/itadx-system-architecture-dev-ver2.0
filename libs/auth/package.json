@@ -1,0 +1,1 @@
+{"name":"@itadx/auth","version":"1.0.0","main":"dist/index.js","scripts":{"build":"tsc"},"dependencies":{"@itadx/common":"workspace:*","@nestjs/passport":"^10.0.3","passport-jwt":"^4.0.1"},"devDependencies":{"@types/passport-jwt":"^4.0.0"}}

@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(test:*)",
+      "Bash(pnpm install:*)",
+      "Bash(docker info:*)",
+      "Bash(docker compose:*)",
+      "Bash(docker exec:*)",
+      "Bash(NODE_ENV=dev node:*)",
+      "Bash(timeout 30 node:*)",
+      "Bash(ls:*)",
+      "Bash(pnpm --filter @itadx/auth-api add:*)",
+      "Bash(pnpm --filter @itadx/admin-api add -D @types/bcryptjs)",
+      "Bash(echo \"still NOT FOUND\" ls \"D:\\\\ita-dev\\\\itadx-system-architecture-claudeCli-test/node_modules/.pnpm/@types+bcryptjs\"*)",
+      "Bash(npm view:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm run build:libs:*)",
+      "Bash(timeout 20 node:*)",
+      "Bash(tasklist:*)",
+      "Bash(netstat:*)",
+      "Bash(pnpm run build)",
+      "Bash(pnpm --filter admin-web build)",
+      "Bash(pnpm --filter @itadx/gateway-api build)",
+      "Bash(pnpm --filter @itadx/erp-api build)",
+      "Bash(node -e \"const bcrypt = require\\(''bcryptjs''\\); bcrypt.compare\\(''password123'', ''$2b$12$LJ3m4ys3GHbsU4v4N3dKwObpE5Y.Ryl/IqR5YRnPALjCmVUPneS0u''\\).then\\(r => console.log\\(''password123 match:'', r\\)\\);\")",
+      "Bash(node -e \"const bcrypt = require\\(''./node_modules/bcryptjs''\\); bcrypt.compare\\(''password123'', ''$2b$12$LJ3m4ys3GHbsU4v4N3dKwObpE5Y.Ryl/IqR5YRnPALjCmVUPneS0u''\\).then\\(r => console.log\\(''password123 match:'', r\\)\\);\")",
+      "Bash(node -e \"const bcrypt = require\\(''/d/ita-dev/itadx-system-architecture-claudeCli-test/node_modules/.pnpm/bcryptjs@2.4.3/node_modules/bcryptjs''\\); Promise.all\\([bcrypt.compare\\(''password123'', ''$2b$12$LJ3m4ys3GHbsU4v4N3dKwObpE5Y.Ryl/IqR5YRnPALjCmVUPneS0u''\\), bcrypt.hash\\(''password123'', 10\\)]\\).then\\(\\([match, hash]\\) => { console.log\\(''match:'', match\\); console.log\\(''new hash:'', hash\\); }\\);\")",
+      "Bash(node -e \"const bcrypt = require\\(''D:\\\\\\\\ita-dev\\\\\\\\itadx-system-architecture-claudeCli-test\\\\\\\\node_modules\\\\\\\\.pnpm\\\\\\\\bcryptjs@2.4.3\\\\\\\\node_modules\\\\\\\\bcryptjs''\\); Promise.all\\([bcrypt.compare\\(''password123'', ''$2b$12$LJ3m4ys3GHbsU4v4N3dKwObpE5Y.Ryl/IqR5YRnPALjCmVUPneS0u''\\), bcrypt.hash\\(''password123'', 10\\)]\\).then\\(\\([match, hash]\\) => { console.log\\(''match:'', match\\); console.log\\(''new hash:'', hash\\); }\\);\")",
+      "Bash(node test-bcrypt.js)",
+      "Bash(curl -s -X POST http://localhost:4003/api/auth/login -H \"Content-Type: application/json\" -d '{\"\"email\"\":\"\"admin@itadx.com\"\",\"\"password\"\":\"\"password123\"\"}')",
+      "Bash(curl -s -X POST http://localhost:4001/api/auth/login -H \"Content-Type: application/json\" -d '{\"\"email\"\":\"\"admin@itadx.com\"\",\"\"password\"\":\"\"password123\"\"}')",
+      "Bash(pip show python-pptx)",
+      "Bash(pip install python-pptx)",
+      "Bash(python generate-ppt.py)"
+    ]
+  }
+}

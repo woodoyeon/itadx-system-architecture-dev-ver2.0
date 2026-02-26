@@ -1,0 +1,1 @@
+{"name":"@itadx/websocket","version":"1.0.0","main":"dist/index.js","scripts":{"build":"tsc"},"dependencies":{"@nestjs/websockets":"^10.3.0","socket.io":"^4.7.0"}}

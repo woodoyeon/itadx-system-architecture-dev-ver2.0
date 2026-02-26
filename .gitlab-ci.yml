@@ -1,0 +1,54 @@
+stages: [test, lint, build, deploy]
+
+variables:
+  HARBOR: harbor.itadx.com/itadx
+
+test:backend:
+  stage: test
+  image: node:20-alpine
+  script:
+    - npm i -g pnpm && pnpm install --frozen-lockfile
+    - pnpm test
+  rules:
+    - changes: ["services/**", "libs/**"]
+
+test:engine:
+  stage: test
+  image: python:3.11-slim
+  script:
+    - cd engine/engine-api && pip install -r requirements.txt && pytest tests/ -v
+  rules:
+    - changes: ["engine/**"]
+
+lint:
+  stage: lint
+  image: node:20-alpine
+  script:
+    - npm i -g pnpm && pnpm install --frozen-lockfile && pnpm lint
+
+build:
+  stage: build
+  image: docker:24
+  services: [docker:24-dind]
+  script:
+    - docker login -u $HARBOR_USER -p $HARBOR_PASS harbor.itadx.com
+    - for svc in auth-api admin-api erp-api gateway-api; do
+        docker build -t $HARBOR/$svc:$CI_COMMIT_SHORT_SHA -f services/$svc/Dockerfile . && docker push $HARBOR/$svc:$CI_COMMIT_SHORT_SHA;
+      done
+    - docker build -t $HARBOR/engine-api:$CI_COMMIT_SHORT_SHA engine/engine-api && docker push $HARBOR/engine-api:$CI_COMMIT_SHORT_SHA
+    - docker build -t $HARBOR/admin-web:$CI_COMMIT_SHORT_SHA -f apps/admin-web/Dockerfile . && docker push $HARBOR/admin-web:$CI_COMMIT_SHORT_SHA
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "main"
+
+deploy:test:
+  stage: deploy
+  script: ssh deploy@192.168.10.33 "cd /opt/itadx && docker-compose pull && docker-compose up -d"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+
+deploy:prod:
+  stage: deploy
+  when: manual
+  script: ssh deploy@221.188.33.4 "cd /opt/itadx && docker-compose pull && docker-compose up -d"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"

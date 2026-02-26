@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.next/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.venv/
+venv/
+coverage/
+.DS_Store
+*.log
+.turbo/
+
+# 중첩된 다른 클론 제외 (동일 리포 연결 시 충돌 방지)
+itadx-system-architecture/
