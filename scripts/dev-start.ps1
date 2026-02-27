@@ -15,8 +15,8 @@ Start-Sleep -Seconds 5
 
 # 2. DB 초기화
 Write-Host "`n2. DB 초기화 및 시드..." -ForegroundColor Yellow
-Get-Content "scripts\init-db.sql" | docker exec -i itadx-postgres psql -U itadx -d itadx_mvp 2>$null
-Get-Content "scripts\seed.sql" | docker exec -i itadx-postgres psql -U itadx -d itadx_mvp 2>$null
+Get-Content "scripts\init-db.sql" -Encoding UTF8 -Raw | docker exec -i itadx-postgres psql -U itadx -d itadx_mvp 2>$null
+    Get-Content "scripts\seed.sql" -Encoding UTF8 -Raw | docker exec -i itadx-postgres psql -U itadx -d itadx_mvp 2>$null
 Write-Host "   DB 초기화 완료." -ForegroundColor Green
 
 # 3. 의존성

@@ -11,8 +11,14 @@ if (-not $pg) {
     Write-Host "Postgres/Redis가 안 떠 있습니다. 먼저: .\scripts\setup.ps1" -ForegroundColor Yellow
     $run = Read-Host "지금 Docker만 띄울까요? (y/n)"
     if ($run -eq "y") {
-        docker compose -f (Join-Path $ProjectRoot "docker-compose.dev.yaml") up -d 2>$null
-        if ($LASTEXITCODE -ne 0) { docker-compose -f (Join-Path $ProjectRoot "docker-compose.dev.yaml") up -d }
+        $prevErr = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
+        try {
+            docker compose -f (Join-Path $ProjectRoot "docker-compose.dev.yaml") up -d 2>&1 | Out-Null
+            if ($LASTEXITCODE -ne 0) { docker-compose -f (Join-Path $ProjectRoot "docker-compose.dev.yaml") up -d 2>&1 | Out-Null }
+        } finally {
+            $ErrorActionPreference = $prevErr
+        }
         Start-Sleep -Seconds 3
     } else { exit 1 }
 }
